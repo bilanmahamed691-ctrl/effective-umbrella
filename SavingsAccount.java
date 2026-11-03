@@ -1,15 +1,21 @@
-public class SavingsAccount extends BankAccount {
-    private double minimumBalance;
+import java.util.Stack;
 
-    public SavingsAccount(String accountNumber, double balance, double minimumBalance) {
-        super(accountNumber, balance);
-        this.minimumBalance = minimumBalance;
+public class SavingsAccount {
+    private double balance;
+    private Stack<Double> history = new Stack<>();
+    public SavingsAccount(double balance) { this.balance = balance; }
+    public void deposit(double amount) {
+        balance = balance + amount;
+        history.push(amount);              // remember it
+        System.out.println("Deposit " + amount + " -> balance " + balance);
     }
-
-    @Override
-    public void withdraw(double amount) throws InsufficientBalanceException {
-        if (balance - amount < minimumBalance)
-            throw new InsufficientBalanceException("Must keep at least " + minimumBalance);
-        balance -= amount;
+    public void undoLastDeposit() {
+        if (history.isEmpty()) {
+            System.out.println("Nothing to undo");
+            return;
+        }
+        double last = history.pop();       // most recent deposit
+        balance = balance - last;
+        System.out.println("Undo " + last + " -> balance " + balance);
     }
 }
